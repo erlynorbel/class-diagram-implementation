@@ -261,6 +261,11 @@ int main() {
                 cout << "Enter the quantity: ";
                 cin >> quantity;
 
+                // Convert productId to uppercase
+                for (char& c : productId) {
+                    c = toupper(c);
+                }
+
                 bool found = false;
                 for (int i = 0; i < productCount; ++i) {
                     if (products[i].getProductId() == productId) {
