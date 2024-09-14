@@ -10,6 +10,7 @@ const int MAX_ORDERS = 100;
 
 class Product {
 private:
+    // Product details
     string productId;
     string name;
     string description;
@@ -17,8 +18,10 @@ private:
     int stock;
 
 public:
+    // Default constructor to create an empty product
     Product() : productId(""), name(""), description(""), price(0.0), stock(0) {}
 
+    // Constructor to create a product with the given details
     Product(const string& productId, const string& name, const string& description, float price, int stock)
         : productId(productId), name(name), description(description), price(price), stock(stock) {}
 
@@ -28,6 +31,7 @@ public:
     float getPrice() const { return price; }
     int getStock() const { return stock; }
 
+  // Update the stock quantity of the product  
     void updateStock(int quantity) {
         if (stock >= quantity) {
             stock -= quantity;
@@ -36,6 +40,7 @@ public:
         }
     }
 
+    // Get a detailed description of the product
     string getDetail() const {
         return "ID: " + productId + ", Name: " + name + ", Price: $" + to_string(price) + ", Stock: " + to_string(stock);
     }
@@ -43,16 +48,20 @@ public:
 
 class ShoppingCart {
 private:
+// Shopping cart details
     string cartId;
     Product cartItems[MAX_CART_ITEMS];
     int quantities[MAX_CART_ITEMS];
     int itemCount;
 
 public:
+// Default constructor to create an empty shopping cart
     ShoppingCart() : cartId(""), itemCount(0) {}
 
+// Constructor to create a shopping cart with the given cart ID
     ShoppingCart(const string& cartId) : cartId(cartId), itemCount(0) {}
 
+// Add a product to the shopping cart with the given quantity
     void addToCart(Product& product, int quantity) {
         if (itemCount < MAX_CART_ITEMS) {
             cartItems[itemCount] = product;
@@ -64,7 +73,7 @@ public:
             cout << "Cart is full. Cannot add more items." << endl;
         }
     }
-
+    // View the contents of the shopping cart
     void viewCart() const {
         if (itemCount == 0) {
             cout << "Your shopping cart is empty!" << endl;
@@ -76,12 +85,13 @@ public:
             cout << cartItems[i].getDetail() << ", Quantity: " << quantities[i] << endl;
         }
     }
-
+  // Clear the shopping cart  
     void clearCart() {
         itemCount = 0;
         cout << "Shopping cart cleared." << endl;
     }
-
+    
+// Getters for shopping cart items and quantities
     Product* getCartItems() { return cartItems; }
     int* getQuantities() { return quantities; }
     int getItemCount() const { return itemCount; }
@@ -106,6 +116,7 @@ public:
     Order(const string& orderId, const string& orderDate, const string& orderStatus, float totalAmount)
         : orderId(orderId), orderDate(orderDate), orderStatus(orderStatus), totalAmount(totalAmount), orderItemCount(0) {}
 
+    // Place an order with the items from the given shopping cart
     void placeOrder(ShoppingCart& cart) {
         orderItemCount = cart.getItemCount();
         for (int i = 0; i < orderItemCount; ++i) {
@@ -117,12 +128,14 @@ public:
         cout << "Order placed successfully! Order ID: " << orderId << ", Total Amount: $" << totalAmount << endl;
     }
 
+    // Cancel the order
     void cancelOrder() {
         orderItemCount = 0;
         orderStatus = "Cancelled";
         cout << "Order " << orderId << " has been cancelled." << endl;
     }
 
+    // View the details of the order
     void viewOrderDetails() const {
         cout << "\nOrder ID: " << orderId << ", Date: " << orderDate << ", Status: " << orderStatus << ", Total Amount: $" << totalAmount << endl;
         
@@ -141,6 +154,7 @@ public:
 
 class Customer {
 private:
+// Customer details
     string customerId;
     string customerName;
     string email;
@@ -150,36 +164,41 @@ private:
     int orderCount;
 
 public:
+// Constructor to create a customer with the given details
     Customer(const string& customerId, const string& name, const string& email, const string& address)
         : customerId(customerId), customerName(name), email(email), address(address), cart("CART_" + customerId), orderCount(0) {}
 
+// Add a product to the shopping cart with the given quantity
     void addToCart(Product& product, int quantity) {
         cart.addToCart(product, quantity);
     }
 
+// View the contents of the shopping cart
     void viewCart() const {
         cart.viewCart();
     }
 
+// Place an order with the items in the shopping cart
     void placeOrder() {
         if (cart.getItemCount() == 0) {
             cout << "Cart is empty, cannot place an order." << endl;
             return;
         }
-
+// Create a new order with the items in the cart
         string orderId = "ORD_" + to_string(orderCount + 1);
-        Order newOrder(orderId, "2024-09-13", "Placed", 0.0);
+        Order newOrder(orderId, "2024-09-14", "Placed", 0.0);
         newOrder.placeOrder(cart);
         orderHistory[orderCount++] = newOrder;
         cart.clearCart();
     }
 
+// View the order history of the customer
     void viewOrderHistory() const {
         if (orderCount == 0) {
             cout << "No orders have been placed yet." << endl;
             return;
         }
-
+// Print order details for each order in the history
         for (int i = 0; i < orderCount; ++i) {
             orderHistory[i].viewOrderDetails();
         }
@@ -187,6 +206,7 @@ public:
 };
 
 void displayMenu() {
+    // Display the main menu options
     cout << "\n--- SAVEWAY ---\n";
     cout << "1. View Products\n";
     cout << "2. Add Product to Cart\n";
